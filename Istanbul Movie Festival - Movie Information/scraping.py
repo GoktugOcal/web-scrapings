@@ -57,6 +57,6 @@ while(True):
 
 driver.close()
 
-with open("movies.json", "w", encoding='utf8') as f:
+with open("data/movies.json", "w", encoding='utf8') as f:
     f.write(json.dumps(all_movie_list, indent=4))
     print("JSON created...")

@@ -17,6 +17,15 @@ def movie_info_scrapper(movie):
     except:
         movie["awards"] = None
 
+    elem = dom.xpath('//*[@id="content"]/article/section[1]/div/div[3]/div/h2')
+    if elem:
+        orig_name = elem[0].findall("i")
+
+        if orig_name: movie["original_name"] = orig_name[0].text
+        else: movie["original_name"] = movie["movie_name"]
+    else: movie["original_name"] = movie["movie_name"]
+    
+
     movie["description"] = soup.find_all("p")[-4].text
     movie["section"] = soup.find_all("h6")[-1].text
 
@@ -39,7 +48,7 @@ def movie_info_scrapper(movie):
 
 if __name__ == "__main__":
 
-    with open("movies.json", "r", encoding='utf8') as f:
+    with open("data/movies.json", "r", encoding='utf8') as f:
         all_movie_list = json.loads(f.read())
 
     # multiprocessing.freeze_support()
@@ -47,6 +56,6 @@ if __name__ == "__main__":
     pool = multiprocessing.Pool(processes=32)
     all_movie_list = pool.map(movie_info_scrapper, all_movie_list)
 
-    with open("movies.json", "w", encoding='utf8') as f:
+    with open("data/movies.json", "w", encoding='utf8') as f:
         f.write(json.dumps(all_movie_list, indent=4))
         print("JSON created...")
